@@ -26,6 +26,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
 
     compile 'com.github.austinv11:Discord4J:2.9.2'
+    compile 'com.ibm.watson.developer_cloud:conversation:4.1.0'
 
     compile 'ch.qos.logback:logback-classic:1.0.13'
 }
@@ -35,4 +36,23 @@ compileKotlin {
 }
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+//Fat jar
+jar {
+
+    from {
+        configurations.runtime.collect {
+            it.isDirectory() ? it: zipTree(it)
+        }
+        configurations.compile.collect {
+            it.isDirectory() ? it: zipTree(it)
+        }
+    }
+
+    manifest {
+        attributes 'Main-Class': 'net.nimamoh.MainKt'
+    }
+
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
 }
